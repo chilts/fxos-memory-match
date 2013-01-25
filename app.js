@@ -48,7 +48,7 @@ var opts = {
 // static routes
 app.use(cachify.setup(assets, opts));
 app.use(express.favicon());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), { maxAge : 24*60*60 } ));
 
 // logger
 app.use(express.logger(env.NODE_ENV === 'production' ? 'default' : 'dev' ));
