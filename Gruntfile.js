@@ -35,7 +35,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
 
     // default task
-    grunt.registerTask('default', 'uglify cssmin concat'.split(' '));
+    grunt.registerTask('default', 'uglify cssmin'.split(' '));
 };
 
 // ----------------------------------------------------------------------------
