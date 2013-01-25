@@ -153,7 +153,7 @@ $(function() {
     };
 
     var bounceMe = function($img) {
-        var jumpHeight = 30 + Math.round(Math.random()*15);
+        var jumpHeight = 12 + Math.round(Math.random()*8);
         var speed = 150 + Math.round(Math.random()*50);
 
         $img.animate({

@@ -1,30 +1,43 @@
-.grid_12 {
-    margin-bottom: 20px;
+.body {
+    width: 320px;
+    height: 480px;
+    overflow: hidden;
+    text-align: center;
 }
 
-.grid_2 {
+.fr {
+    float: right;
+}
+
+.board {
+    width: 264px;
+    height: 264px;
+    margin: auto;
+}
+
+.grid {
+    float: left;
     background-color: #eee;
-    height: 140px;
 }
 
-.grid_2 div.card {
-    margin: 20px;
-    width: 100px;
-    height: 100px;
+.grid div.card {
+    margin: 8px;
+    width: 48px;
+    height: 48px;
     border: 1px solid #333;
 }
 
-.grid_2 div.card img {
-    margin: 18px;
-    width: 64px;
-    height: 64px;
+.grid div.card img {
+    margin: 8px;
+    width: 32px;
+    height: 32px;
 }
 
-.grid_2 div.back {
+.grid div.back {
     background-color: red;
 }
 
-.grid_2 div.front {
+.grid div.front {
     background-color: orange;
 }
 
@@ -39,6 +52,10 @@
 img {
     display: block;
     position: relative;
+}
+
+.footer {
+    clear: both;
 }
 
 div#preload {

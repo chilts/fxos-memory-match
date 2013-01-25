@@ -34,7 +34,6 @@ var assets = {
         '/s/js/ready.js',
     ],
     '/s/css/all.min.css' : [
-        '/s/css/960.css',
         '/s/css/style.css',
     ],
 };
@@ -65,6 +64,14 @@ var routes = {};
 
 routes.index = function(req, res) {
     res.render('index.jade');
+};
+
+var manifest;
+routes.manifest = function(req, res) {
+    if ( !manifest ) {
+        manifest = fs.readFileSync('./public/manifest.webapp', 'utf-8');
+    }
+    return res.send({ 'Content-Type' : 'application/x-web-app-manifest+json' }, manifest);
 };
 
 app.get( '/', routes.index );

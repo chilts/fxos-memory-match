@@ -1,0 +1,23 @@
+{
+    "name"        : "memory-match",
+    "version"     : "0.1.0",
+    "description" : "A Firefox OS example app.",
+    "launch_path" : "/",
+    "fullscreen"  : "true",
+
+    "icons"       : {
+         "16" : "/s/img/memory-match-16.png",
+         "48" : "/s/img/memory-match-48.png",
+        "128" : "/s/img/memory-match-128.png"
+    },
+
+    "developer" : {
+        "name" : "Andrew chilton",
+        "url"  : "http://memory-match.chilts.org/"
+    },
+
+    "installs_allowed_from" : ["*"],
+    "appcache_path"         : "/cache.manifest",
+    "locales"               : {},
+    "default_locale"        : "en"
+}

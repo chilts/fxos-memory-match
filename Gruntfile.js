@@ -26,16 +26,6 @@ module.exports = function(grunt) {
                 src  : 'public/s/css/style.css',
                 dest : 'public/s/css/style.min.css',
             },
-            ninesixty : {
-                src  : 'public/s/css/960.css',
-                dest : 'public/s/css/960.min.css',
-            },
-        },
-        concat : {
-            all : {
-                src  : [ 'public/s/css/960.min.css', 'public/s/css/style.min.css' ],
-                dest : 'public/s/css/all.min.css',
-            },
         },
     });
 
