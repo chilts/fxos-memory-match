@@ -7,7 +7,12 @@ html
   body
     .top
       .fr
-        a#login(href="#") Login with BrowserId
+        if req.user
+          | In!
+        else
+          a#login(href="#")
+            img(src="/s/img/login.png",width="185",height="27")
+
       | Memory Match
 
     p.c
@@ -146,4 +151,5 @@ html
     img(src="/s/i/turtle.png",alt="turtle")
     img(src="/s/i/wolf.png",alt="wolf")
 
+  script(src="https://login.persona.org/include.js")
   | !{cachify_js('/s/js/all.min.js')}

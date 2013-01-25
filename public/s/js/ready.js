@@ -300,6 +300,38 @@ $(function() {
     resetAll();
 
     // ------------------------------------------------------------------------
+    // non game specific stuff
+
+    $('#login').click(function(ev) {
+        ev.preventDefault();
+        navigator.id.getVerifiedEmail(function(assertion) {
+            if ( !assertion ) {
+                // not logged in, so refresh
+                return location.reload();
+            }
+
+            // send to the server for verification
+            console.log('here1');
+            $.ajax({
+                type    : 'POST',
+                url     : '/auth/browserid',
+                data    : { assertion: assertion },
+                success : function(res, status, xhr) {
+                    console.log('here2');
+                    location = '/';
+                },
+                error   : function(xhr, status, error) {
+                    console.log('here3');
+                    alert("Login failure: " + error);
+                    return location.reload();
+                }
+            });
+            console.log('here4');
+        });
+    });
+
+    // ------------------------------------------------------------------------
+
 });
 
 $(window).load(function () {
