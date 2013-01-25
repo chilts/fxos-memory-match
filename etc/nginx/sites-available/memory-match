@@ -1,0 +1,18 @@
+# Load balancer with only one server for the moment (since we're keeping games in memory, soon to be Redis)
+upstream lb {
+    server localhost:5000;
+}
+
+# Proxy through the main site to the backend Node.js processes.
+server {
+
+    server_name memory-match.chilts.org;
+    listen 80;
+
+    access_log /var/log/nginx/memory-match.access.log;
+    error_log  /var/log/nginx/memory-match.error.log;
+
+    location / {
+        proxy_pass  http://lb;
+    }
+}
