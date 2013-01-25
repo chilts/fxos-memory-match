@@ -8,7 +8,7 @@ npm install
 grunt uglify cssmin
 
 # set up Nginx
-sudo cp etc/nginx/sites-available/memory-match /etc/nginx/sites-enabled/
+sudo cp etc/nginx/sites-available/memory-match /etc/nginx/sites-available/
 sudo ln -s /etc/nginx/sites-available/memory-match /etc/nginx/sites-enabled/
 sudo service nginx reload
 
