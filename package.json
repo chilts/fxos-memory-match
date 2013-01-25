@@ -1,0 +1,23 @@
+{
+    "name" : "memory-match",
+    "private" : true,
+    "version" : "0.1.0",
+    "description" : "A Firefox OS example app.",
+    "author" : {
+        "name"  : "Andrew Chilton",
+        "email" : "andychilton@gmail.com",
+        "url"   : "http://www.chilts.org/"
+    },
+    "dependencies" : {
+        "express" : "~3.0.x",
+        "connect-cachify" : "0.0.12",
+        "redis"   : "~0.8.x",
+        "jade"    : "~0.28.x"
+    },
+    "devDependencies": {
+        "grunt": "0.4.0rc7",
+        "grunt-css": "~0.5.x",
+        "grunt-contrib-uglify": "~0.1.1rc6",
+        "grunt-contrib-concat": "0.1.2rc6"
+    }
+}
