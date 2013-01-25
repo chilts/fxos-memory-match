@@ -1,5 +1,5 @@
 # Load balancer with only one server for the moment (since we're keeping games in memory, soon to be Redis)
-upstream lb {
+upstream lb_memory_match {
     server localhost:5000;
 }
 
@@ -13,6 +13,6 @@ server {
     error_log  /var/log/nginx/memory-match.error.log;
 
     location / {
-        proxy_pass  http://lb;
+        proxy_pass  http://lb_memory_match;
     }
 }
