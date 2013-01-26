@@ -123,10 +123,16 @@ routes.manifest = function(req, res) {
 };
 
 app.get( '/', routes.index );
-
 app.post(
-    '/auth/browserid',
+    '/login',
     auth.browserid
+);
+app.get(
+    '/logout',
+    function(req, res) {
+        delete req.session.email;
+        res.send('OK');
+    }
 );
 
 // --------------------------------------------------------------------------------------------------------------------
