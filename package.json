@@ -13,6 +13,7 @@
         "connect-cachify"    : "0.0.12",
         "redis"              : "~0.8.x",
         "connect-redis"      : "1.4.x",
+        "qs"                 : "~0.5.x",
         "jade"               : "~0.28.x"
     },
     "devDependencies": {
