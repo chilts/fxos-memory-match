@@ -393,7 +393,7 @@ $(function() {
     // ------------------------------------------------------------------------
     // socket io
 
-    var socket = io.connect('http://localhost');
+    var socket = io.connect('http://memory-match.chilts.org/');
     socket.on('news', function (data) {
         console.log(data);
         socket.emit('my other event', { my: 'data' });
