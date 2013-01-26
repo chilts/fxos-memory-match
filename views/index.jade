@@ -16,8 +16,14 @@ html
 
       | Memory Match
 
-    p.c
+    p.c.info-start
       button(id="start") Start Game
+    p.c.info-end
+      | Yay! Completed in 
+      span(id="clicks")
+      |  clicks, 
+      span(id="time")
+      |  millisconds.
 
     .board
       .grid

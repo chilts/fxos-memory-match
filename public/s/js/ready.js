@@ -65,6 +65,8 @@ $(function() {
     var $cards = $('.card');
     var $fronts = $('.front');
     var $backs = $('.back');
+    var $infoStart = $('.info-start');
+    var $infoEnd = $('.info-end');
 
     var endSequenceTimeout;
     var endSequenceInMotion;
@@ -99,12 +101,19 @@ $(function() {
         // show the front of the cards
         $backs.stop(false, true).addClass('hide').css({ 'rotate' : '0deg', 'scale' : 1.0 });
         $fronts.stop(false, true).removeClass('hide').css({ 'rotate' : '0deg', 'scale' : 1.0 });
+
+        // put the start button back, hide the other info
+        $infoStart.show();
+        $infoEnd.hide();
     };
 
     // ------------------------------------------------------------------------
     // intro animation
 
     startIntroSequence = function() {
+        $infoStart.show();
+        $infoEnd.hide();
+
         introInterval = setInterval(function() {
             var img = Math.floor(Math.random()*$frontImgs.size());
             var icon = Math.floor(Math.random()*icons.length);
@@ -172,6 +181,28 @@ $(function() {
     var startEndSequence = function() {
         endSequenceInMotion = true;
 
+        // ok, let's figure out how long this took the user
+        game.ended = Date.now();
+        // console.log('You took ' + ( game.ended - game.started ) + ' milliseconds');
+        // console.log('You did ' + game.clicks + ' clicks');
+
+        $infoStart.hide();
+        $infoEnd.show();
+        $('#time').html(game.ended - game.started);
+        $('#clicks').html(game.clicks);
+
+        $.ajax({
+            type    : 'POST',
+            url     : '/save',
+            data    : { time : game.ended - game.started, clicks : game.clicks },
+            success : function(res, status, xhr) {
+                console.log('Saved');
+            },
+            error   : function(xhr, status, error) {
+                console.error("Save failure: " + error);
+            }
+        });
+
         // reset the front images first
         $frontImgs.transition({ 'scale' : 1, 'opacity' : 1 });
 
@@ -191,9 +222,16 @@ $(function() {
     // ------------------------------------------------------------------------
     // playing the game
 
+    var game;
+
     var newGame = function() {
         // firstly, reset everything
         resetAll();
+
+        game = {
+            started : Date.now(),
+            clicks  : 0
+        };
 
         // stopEndSequence();
         $fronts.addClass('hide');
@@ -251,6 +289,9 @@ $(function() {
         var $back = $(this);
         var $front = $(this).prev();
         var $img = $front.find('img');
+
+        game.clicks++;
+
         $back
             .transition({ 'rotateY' : '+=90deg', 'scale' : 2 }, 250, 'linear', function() {
                 $back.addClass('hide');

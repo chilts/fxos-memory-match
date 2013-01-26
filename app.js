@@ -34,6 +34,12 @@ redis.select(databaseNumber, function(err, res) {
     console.log('Redis database ' + databaseNumber + ' selected');
 });
 
+function logIfErr(err, res) {
+    if (err) {
+        console.log('Redis Error: ', err);
+    }
+}
+
 // --------------------------------------------------------------------------------------------------------------------
 // finally, the app itself
 
@@ -134,6 +140,75 @@ app.get(
         res.send('OK');
     }
 );
+
+app.post(
+    '/save',
+    function(req, res) {
+        console.log(req.body.time);
+        console.log(req.body.clicks);
+
+        res.set('Content-Type', 'text/plain');
+
+        if ( req.session.email ) {
+            console.log('Saving highscores');
+            redis.multi()
+                .zadd('leaderboard:fastest', req.body.time, req.session.email)
+                .zadd('leaderboard:lowest', req.body.clicks, req.session.email)
+                .exec(function(err, result) {
+                    console.log('result: ', result);
+                    logIfErr(err, result);
+                    if (err)
+                        return res.send('ERR');
+                    res.send('OK');
+                })
+            ;
+        }
+        else {
+            console.log('Not saving highscores');
+            res.send('Not Logged In');
+        }
+    }
+);
+
+app.get('/highscores', function(req, res) {
+    res.set('Content-Type', 'text/plain');
+
+    // get the highscores
+    redis.multi()
+        .zrangebyscore('leaderboard:fastest', '0', '+inf', 'WITHSCORES', 'LIMIT', 0, 10)
+        .zrangebyscore('leaderboard:lowest', '0', '+inf', 'WITHSCORES', 'LIMIT', 0, 10)
+        .exec(function(err, results) {
+            console.log('Results: ', results);
+
+            var text = '';
+
+            text += "Fastest Times\n";
+            text += "-------------\n";
+            results[0].forEach(function(v, i) {
+                if ( (i%2) == 0 ) {
+                    text += v + "\n";
+                }
+                else {
+                    text += "                                        " + v + "\n";
+                }
+            });
+
+            text += "\n\n\n\n\nLowest Clicks\n";
+            text += "-------------\n";
+            results[1].forEach(function(v, i) {
+                if ( (i%2) == 0 ) {
+                    text += v + "\n";
+                }
+                else {
+                    text += "                                        " + v + "\n";
+                }
+            });
+            text += "-------------\n";
+            res.send(text);
+        })
+    ;
+
+});
 
 // --------------------------------------------------------------------------------------------------------------------
 // server
