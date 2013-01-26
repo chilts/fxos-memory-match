@@ -9,6 +9,7 @@ var http = require('http');
 
 var express = require('express');
 var cachify = require('connect-cachify');
+var socketio = require('socket.io');
 
 var redis = require('redis').createClient();
 var RedisStore = require('connect-redis')(express);
@@ -16,6 +17,11 @@ var RedisStore = require('connect-redis')(express);
 var auth = require('./lib/auth.js');
 
 var env = process.env;
+
+
+// this holds a list of all current, new and old games
+var newGame;
+var games = {};
 
 // --------------------------------------------------------------------------------------------------------------------
 // setup
@@ -107,6 +113,7 @@ app.use(function(req, res, next) {
     res.locals.user = req.user || false;
 
     console.log('Right here for ' + req.path);
+    console.log('sessionId=' + req.sessionID);
 
     next();
 });
@@ -215,9 +222,83 @@ app.get('/highscores', function(req, res) {
 
 var server = http.createServer(app);
 var port = parseInt(process.argv[2], 10) || 5000;
+var io = socketio.listen(server);
 
 server.listen(port, function() {
     console.log("Memory Match (Firefox OS App) listening on port " + port);
+});
+
+io.sockets.on('connection', function (socket) {
+
+    socket.on('join', function(email) {
+        console.log('Joining game ...' + email);
+        // firstly, find a newGame
+        if ( !newGame ) {
+            console.log('Making a new game');
+            newGame = [];
+        }
+
+        // save this socket
+        console.log('Saving this socket onto the game');
+        newGame.push({
+            socket : socket,
+            email  : email,
+        });
+
+        // if we have 4 players, start the game
+        if ( newGame.length === 2 ) {
+            console.log('We have two players now');
+            var gameId = Date.now();
+            newGame.forEach(function(user, i) {
+                console.log('Telling the user the game id is:' + gameId);
+                user.socket.emit('start', gameId);
+            });
+
+            // remember this game
+            games[gameId] = {
+                users : newGame,
+                won : false,
+            },
+            console.log('All games:', games);
+
+            // start a new one
+            newGame = []
+        }
+        else {
+            console.log('Not enough players yet');
+        }
+    });
+
+    socket.on('finished', function(usersGame) {
+        console.log('This user has finished:', usersGame);
+        console.log('All games:', games);
+
+        // find the game
+        var serverGame = games[usersGame.id];
+        console.log('This game is:', serverGame);
+        if ( serverGame.won ) {
+            // this user hasn't won
+            console.log('Ignoring this finish request');
+        }
+        else {
+            // first finisher
+            var winner, loser;
+            serverGame.won = true;
+            serverGame.users.forEach(function(user, i) {
+                if ( user.email === usersGame.email ) {
+                    winner = user;
+                }
+                else {
+                    loser = user;
+                }
+            });
+
+            // tell each what happened
+            winner.socket.emit('won', loser.email);
+            loser.socket.emit('lost', winner.email);
+        }
+    });
+
 });
 
 // --------------------------------------------------------------------------------------------------------------------

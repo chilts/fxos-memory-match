@@ -8,7 +8,8 @@ html
     .top
       .fr
         if req.session.email
-          | #{req.session.email} | 
+          span#email= req.session.email
+          |  | 
           a(id="logout",href="/logout") Logout
         else
           a#login(href="#")
@@ -16,14 +17,19 @@ html
 
       | Memory Match
 
-    p.c.info-start
-      button(id="start") Start Game
-    p.c.info-end
+    p.c.info.info-start
+      button(id="start") Play Alone
+      button(id="join") Join Game
+    p.c.info.info-end
       | Yay! Completed in 
       span(id="clicks")
       |  clicks, 
       span(id="time")
       |  millisconds.
+    p.c.info.info-won
+      | YOU WON!
+    p.c.info.info-lost
+      | You lost.
 
     .board
       .grid
@@ -162,4 +168,5 @@ html
   script(src="/s/js/jquery.easing-1.3.js")
   script(src="/s/js/jquery.transit-0.9.9.js")
   script(src="https://login.persona.org/include.js")
+  script(src="/socket.io/socket.io.js")
   script(src="/s/js/ready.js")

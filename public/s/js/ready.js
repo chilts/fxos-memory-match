@@ -60,6 +60,7 @@ $(function() {
     // set up some selectors
 
     var $start = $('#start');
+    var $join = $('#join');
     var $frontImgs = $('.front img');
     var $backImgs = $('.back img');
     var $cards = $('.card');
@@ -111,8 +112,8 @@ $(function() {
     // intro animation
 
     startIntroSequence = function() {
+        $('.info').hide()
         $infoStart.show();
-        $infoEnd.hide();
 
         introInterval = setInterval(function() {
             var img = Math.floor(Math.random()*$frontImgs.size());
@@ -186,6 +187,9 @@ $(function() {
         // console.log('You took ' + ( game.ended - game.started ) + ' milliseconds');
         // console.log('You did ' + game.clicks + ' clicks');
 
+        // emit the end game
+        socket.emit('finished', game);
+
         $infoStart.hide();
         $infoEnd.show();
         $('#time').html(game.ended - game.started);
@@ -233,10 +237,9 @@ $(function() {
         // firstly, reset everything
         resetAll();
 
-        game = {
-            started : Date.now(),
-            clicks  : 0
-        };
+        game = game || {};
+        game.started = Date.now();
+        game.clicks = 0;
 
         // stopEndSequence();
         $fronts.addClass('hide');
@@ -385,6 +388,60 @@ $(function() {
                 return location.reload();
             }
         });
+    });
+
+    // ------------------------------------------------------------------------
+    // socket io
+
+    var socket = io.connect('http://localhost');
+    socket.on('news', function (data) {
+        console.log(data);
+        socket.emit('my other event', { my: 'data' });
+    });
+    socket.on('wowza', function (data) {
+        console.log(data);
+        socket.emit('my other event', { id : data.id });
+    });
+
+    $join.click(function() {
+        // reset everything
+        resetAll();
+
+        // tell the server that you want to join a game
+        var email = $('#email').text();
+        socket.emit('join', email);
+
+        // wait for the 'start' event from socket.io
+        socket.on('start', function(gameId) {
+            console.log('gameId is:' + gameId);
+            game = {
+                started : Date.now(),
+                clicks  : 0,
+                id      : gameId,
+                email   : email,
+            };
+
+            if ( false ) {
+                setTimeout(function() {
+                    console.log('Emitting finished');
+                    game.ended = Date.now();
+                    socket.emit('finished', game);
+                }, Math.random()*20000);
+            }
+
+            newGame();
+        });
+
+        socket.on('won', function(email) {
+            $('.info').hide();
+            $('.info-won').show();
+        });
+
+        socket.on('lost', function(email) {
+            $('.info').hide();
+            $('.info-lost').show();
+        });
+
     });
 
     // ------------------------------------------------------------------------
