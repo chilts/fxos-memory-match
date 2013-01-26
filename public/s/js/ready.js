@@ -393,7 +393,7 @@ $(function() {
     // ------------------------------------------------------------------------
     // socket io
 
-    var socket = io.connect('http://memory-match.chilts.org/');
+    var socket = io.connect('/');
     socket.on('news', function (data) {
         console.log(data);
         socket.emit('my other event', { my: 'data' });
@@ -440,6 +440,10 @@ $(function() {
         socket.on('lost', function(email) {
             $('.info').hide();
             $('.info-lost').show();
+            setTimeout(function() {
+                resetAll();
+                startIntroSequence();
+            }, 5000);
         });
 
     });
