@@ -304,7 +304,7 @@ $(function() {
 
     $('#login').click(function(ev) {
         ev.preventDefault();
-        navigator.id.getVerifiedEmail(function(assertion) {
+        navigator.id.get(function(assertion) {
             if ( !assertion ) {
                 // not logged in, so refresh
                 return location.reload();

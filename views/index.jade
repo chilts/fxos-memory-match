@@ -7,8 +7,9 @@ html
   body
     .top
       .fr
-        if req.user
-          | In!
+        if req.session.email
+          | #{req.session.email} | 
+          a(id="logout",href="/logout") Logout
         else
           a#login(href="#")
             img(src="/s/img/login.png",width="185",height="27")

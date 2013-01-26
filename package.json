@@ -10,8 +10,6 @@
     },
     "dependencies" : {
         "express"            : "~3.0.x",
-        "passport"           : "0.1.x",
-        "passport-browserid" : "0.1.x",
         "connect-cachify"    : "0.0.12",
         "redis"              : "~0.8.x",
         "connect-redis"      : "1.4.x",
