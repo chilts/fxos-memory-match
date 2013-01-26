@@ -191,17 +191,22 @@ $(function() {
         $('#time').html(game.ended - game.started);
         $('#clicks').html(game.clicks);
 
-        $.ajax({
-            type    : 'POST',
-            url     : '/save',
-            data    : { time : game.ended - game.started, clicks : game.clicks },
-            success : function(res, status, xhr) {
-                console.log('Saved');
-            },
-            error   : function(xhr, status, error) {
-                console.error("Save failure: " + error);
-            }
-        });
+        if ( navigator.onLine ) {
+            $.ajax({
+                type    : 'POST',
+                url     : '/save',
+                data    : { time : game.ended - game.started, clicks : game.clicks },
+                success : function(res, status, xhr) {
+                    console.log('Saved');
+                },
+                error   : function(xhr, status, error) {
+                    console.error("Save failure: " + error);
+                }
+            });
+        }
+        else {
+            console.log('Not posting scores since not online.');
+        }
 
         // reset the front images first
         $frontImgs.transition({ 'scale' : 1, 'opacity' : 1 });
